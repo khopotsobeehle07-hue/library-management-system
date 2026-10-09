@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../hooks/useAuth";
 
 export default function Login() {
   const { login } = useAuth();
@@ -44,6 +44,7 @@ export default function Login() {
         {error && <p className="error">{error}</p>}
         <button type="submit" className="btn">Log in</button>
       </form>
+      <p className="muted-copy demo-hint">Demo administrator: Admin / ADMIN001</p>
     </div>
   );
 }

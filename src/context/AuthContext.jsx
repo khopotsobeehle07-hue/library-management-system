@@ -1,7 +1,5 @@
-import { createContext, useContext } from "react";
+import AuthStateContext from "./AuthStateContext";
 import useLocalStorage from "../hooks/useLocalStorage";
-
-const AuthContext = createContext(null);
 
 const DEFAULT_USERS = [
   { id: 1, name: "Admin", membershipId: "ADMIN001", role: "admin" },
@@ -27,12 +25,8 @@ export function AuthProvider({ children }) {
   const logout = () => setCurrentUser(null);
 
   return (
-    <AuthContext.Provider value={{ users, setUsers, currentUser, login, logout }}>
+    <AuthStateContext.Provider value={{ users, setUsers, currentUser, login, logout }}>
       {children}
-    </AuthContext.Provider>
+    </AuthStateContext.Provider>
   );
-}
-
-export function useAuth() {
-  return useContext(AuthContext);
 }
