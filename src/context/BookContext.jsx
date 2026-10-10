@@ -1,5 +1,7 @@
-import BooksStateContext from "./BooksStateContext";
+import { createContext, useContext } from "react";
 import useLocalStorage from "../hooks/useLocalStorage";
+
+const BooksContext = createContext(null);
 
 const SAMPLE_BOOKS = [
   { id: 1, title: "Things Fall Apart", author: "Chinua Achebe", genre: "Fiction", isbn: "9780385474542", quantity: 5 },
@@ -9,6 +11,7 @@ const SAMPLE_BOOKS = [
 
 export function BooksProvider({ children }) {
   const [books, setBooks] = useLocalStorage("books", SAMPLE_BOOKS);
+  const [transactions, setTransactions] = useLocalStorage("transactions", []);
 
   const addBook = (book) =>
     setBooks((prev) => [...prev, { ...book, id: Date.now() }]);
@@ -19,9 +22,46 @@ export function BooksProvider({ children }) {
   const deleteBook = (id) =>
     setBooks((prev) => prev.filter((b) => b.id !== id));
 
+  // Returns an error message string, or null on success
+  const recordTransaction = ({ bookId, type, quantity, member, recordedBy }) => {
+    const book = books.find((b) => b.id === bookId);
+    if (!book) return "Book not found.";
+    if (type === "borrow" && quantity > book.quantity) {
+      return `Not enough stock. Only ${book.quantity} in stock.`;
+    }
+
+    const change = type === "add" ? quantity : -quantity;
+
+    setBooks((prev) =>
+      prev.map((b) => (b.id === bookId ? { ...b, quantity: b.quantity + change } : b))
+    );
+
+    setTransactions((prev) => [
+      {
+        id: Date.now(),
+        bookId,
+        bookTitle: book.title, // saved so history survives if the book is deleted
+        type,
+        quantity,
+        member: member || "",
+        recordedBy,
+        date: new Date().toISOString(),
+      },
+      ...prev, // newest first
+    ]);
+
+    return null;
+  };
+
   return (
-    <BooksStateContext.Provider value={{ books, addBook, updateBook, deleteBook }}>
+    <BooksContext.Provider
+      value={{ books, addBook, updateBook, deleteBook, transactions, recordTransaction }}
+    >
       {children}
-    </BooksStateContext.Provider>
+    </BooksContext.Provider>
   );
+}
+
+export function useBooks() {
+  return useContext(BooksContext);
 }

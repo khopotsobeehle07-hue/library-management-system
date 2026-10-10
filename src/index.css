@@ -159,3 +159,20 @@ select { background: white; }
   .actions { flex-wrap: wrap; }
   .form-actions { flex-wrap: wrap; }
 }
+
+.hint { margin: 0.3rem 0 0; font-size: 0.85rem; color: #6b7280; }
+
+.success { color: #1e7e46; font-weight: 600; margin: 1rem 0 0; }
+
+.badge {
+  display: inline-block;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.badge-add { background: #d9f2e3; color: #1e7e46; }
+.badge-borrow { background: #fde8d0; color: #a45a0a; }
+
+.card { margin-bottom: 1.5rem; }
