@@ -176,3 +176,69 @@ select { background: white; }
 .badge-borrow { background: #fde8d0; color: #a45a0a; }
 
 .card { margin-bottom: 1.5rem; }
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.stat-card {
+  background: white;
+  padding: 1.2rem;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  border-left: 5px solid var(--primary);
+}
+
+.stat-card.stat-warning { border-left-color: var(--danger); }
+.stat-value { margin: 0; font-size: 2rem; font-weight: 700; }
+.stat-label { margin: 0.2rem 0 0; color: #6b7280; }
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.filters input { flex: 1 1 260px; width: auto; padding: 0.6rem; border: 1px solid #c5cad6; border-radius: 6px; font-size: 1rem; }
+.filters select { flex: 0 0 180px; width: auto; padding: 0.6rem; border: 1px solid #c5cad6; border-radius: 6px; font-size: 1rem; }
+
+.book-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1rem;
+}
+
+.book-card {
+  background: white;
+  padding: 1.2rem;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  border-top: 5px solid #2e9e5b;
+}
+
+.book-card.low-stock {
+  border-top-color: var(--danger);
+  background: #fff5f4;
+}
+
+.book-card-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 0.5rem; }
+.book-card h3 { margin: 0; font-size: 1.1rem; }
+.book-meta { margin: 0.3rem 0 0; color: #6b7280; font-size: 0.9rem; }
+.book-qty { margin: 1rem 0 0; font-size: 1.8rem; font-weight: 700; }
+.book-qty span { font-size: 0.9rem; font-weight: 400; color: #6b7280; }
+
+.badge-low { background: #fbd5d1; color: var(--danger); white-space: nowrap; }
+
+.badge-role-admin { background: #e2e6f7; color: var(--primary); }
+.badge-role-librarian { background: #fdf0d5; color: #a45a0a; }
+.badge-role-member { background: #e8ebf0; color: #4b5563; }
+
+.you-tag { color: #6b7280; font-size: 0.85rem; }
+
+.btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+form select:disabled { background: #eef0f4; }

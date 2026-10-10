@@ -1,74 +1,68 @@
-import { useBooks } from "../hooks/useBooks";
+import { useState, useMemo } from "react";
+import { useBooks } from "../context/BookContext";
+import BookCard from "../components/BookCard";
+import StatCard from "../components/StatCard";
 
 export default function Dashboard() {
   const { books } = useBooks();
-  const lowStockBooks = books.filter((book) => book.quantity < 2);
-  const totalCopies = books.reduce((total, book) => total + book.quantity, 0);
+  const [search, setSearch] = useState("");
+  const [genre, setGenre] = useState("All");
+
+  const genres = useMemo(
+    () => ["All", ...new Set(books.map((b) => b.genre))],
+    [books]
+  );
+
+  const filtered = useMemo(() => {
+    const term = search.trim().toLowerCase();
+    return books.filter((b) => {
+      const matchesSearch =
+        !term ||
+        b.title.toLowerCase().includes(term) ||
+        b.author.toLowerCase().includes(term) ||
+        b.isbn.includes(term);
+      const matchesGenre = genre === "All" || b.genre === genre;
+      return matchesSearch && matchesGenre;
+    });
+  }, [books, search, genre]);
+
+  const totalCopies = books.reduce((sum, b) => sum + b.quantity, 0);
+  const lowStockCount = books.filter((b) => b.quantity < 2).length;
 
   return (
-    <section className="page-section">
-      <div className="page-heading">
-        <div>
-          <p className="eyebrow">COMMUNITY LIBRARY</p>
-          <h2>Availability overview</h2>
-        </div>
+    <div>
+      <h2>Dashboard</h2>
+
+      <div className="stats">
+        <StatCard label="Book titles" value={books.length} />
+        <StatCard label="Total copies in stock" value={totalCopies} />
+        <StatCard label="Low stock titles" value={lowStockCount} warning={lowStockCount > 0} />
       </div>
 
-      <div className="summary-grid">
-        <article className="summary-item">
-          <span>Catalog titles</span>
-          <strong>{books.length}</strong>
-        </article>
-        <article className="summary-item">
-          <span>Copies in stock</span>
-          <strong>{totalCopies}</strong>
-        </article>
-        <article className="summary-item summary-alert">
-          <span>Low-stock titles</span>
-          <strong>{lowStockBooks.length}</strong>
-        </article>
+      <div className="filters">
+        <input
+          type="search"
+          placeholder="Search by title, author or ISBN..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          aria-label="Search books"
+        />
+        <select value={genre} onChange={(e) => setGenre(e.target.value)} aria-label="Filter by genre">
+          {genres.map((g) => (
+            <option key={g} value={g}>{g}</option>
+          ))}
+        </select>
       </div>
 
-      <section className="list-section">
-        <div className="section-heading">
-          <h3>Current availability</h3>
-          <span className="muted-copy">Low stock means fewer than 2 copies</span>
+      {filtered.length === 0 ? (
+        <p>{books.length === 0 ? "No books in the library yet." : "No books match your search."}</p>
+      ) : (
+        <div className="book-grid">
+          {filtered.map((book) => (
+            <BookCard key={book.id} book={book} />
+          ))}
         </div>
-        {books.length === 0 ? (
-          <p className="empty-state">No books have been added yet.</p>
-        ) : (
-          <div className="table-wrapper">
-            <table>
-              <thead>
-                <tr>
-                  <th>Title</th>
-                  <th>Author</th>
-                  <th>Genre</th>
-                  <th>ISBN</th>
-                  <th>Available</th>
-                  <th>Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                {books.map((book) => (
-                  <tr key={book.id} className={book.quantity < 2 ? "low-stock-row" : ""}>
-                    <td>{book.title}</td>
-                    <td>{book.author}</td>
-                    <td>{book.genre}</td>
-                    <td>{book.isbn}</td>
-                    <td>{book.quantity}</td>
-                    <td>
-                      <span className={`stock-status ${book.quantity < 2 ? "stock-low" : "stock-ok"}`}>
-                        {book.quantity < 2 ? "Low stock" : "Available"}
-                      </span>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
-      </section>
-    </section>
+      )}
+    </div>
   );
 }

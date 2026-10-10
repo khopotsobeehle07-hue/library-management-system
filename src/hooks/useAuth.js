@@ -1,6 +1,2 @@
-import { useContext } from "react";
-import AuthStateContext from "../context/AuthStateContext";
-
-export function useAuth() {
-  return useContext(AuthStateContext);
-}
+// Re-export the hook for the context supplied by AuthProvider.
+export { useAuth } from "../context/AuthContext";

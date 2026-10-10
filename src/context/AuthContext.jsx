@@ -1,5 +1,8 @@
-import AuthStateContext from "./AuthStateContext";
+/* eslint-disable react-refresh/only-export-components */
+import { createContext, useContext } from "react";
 import useLocalStorage from "../hooks/useLocalStorage";
+
+const AuthContext = createContext(null);
 
 const DEFAULT_USERS = [
   { id: 1, name: "Admin", membershipId: "ADMIN001", role: "admin" },
@@ -24,9 +27,29 @@ export function AuthProvider({ children }) {
 
   const logout = () => setCurrentUser(null);
 
+  const addUser = (user) =>
+    setUsers((prev) => [...prev, { ...user, id: Date.now() }]);
+
+  const updateUser = (id, updates) => {
+    setUsers((prev) => prev.map((u) => (u.id === id ? { ...u, ...updates } : u)));
+    // Keep the logged-in session in sync if the user edited themselves
+    if (currentUser && currentUser.id === id) {
+      setCurrentUser({ ...currentUser, ...updates });
+    }
+  };
+
+  const deleteUser = (id) =>
+    setUsers((prev) => prev.filter((u) => u.id !== id));
+
   return (
-    <AuthStateContext.Provider value={{ users, setUsers, currentUser, login, logout }}>
+    <AuthContext.Provider
+      value={{ users, currentUser, login, logout, addUser, updateUser, deleteUser }}
+    >
       {children}
-    </AuthStateContext.Provider>
+    </AuthContext.Provider>
   );
+}
+
+export function useAuth() {
+  return useContext(AuthContext);
 }

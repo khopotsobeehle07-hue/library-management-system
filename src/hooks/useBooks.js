@@ -1,6 +1,2 @@
-import { useContext } from "react";
-import BooksStateContext from "../context/BooksStateContext";
-
-export function useBooks() {
-  return useContext(BooksStateContext);
-}
+// Re-export the hook for the context supplied by BooksProvider.
+export { useBooks } from "../context/BookContext";
