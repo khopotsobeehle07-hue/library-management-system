@@ -242,3 +242,51 @@ select { background: white; }
 .btn:disabled { opacity: 0.4; cursor: not-allowed; }
 
 form select:disabled { background: #eef0f4; }
+
+/* ---------- Typography and spacing ---------- */
+h2 { margin: 0 0 1.2rem; color: var(--primary); }
+h3 { margin: 1.5rem 0 0.8rem; }
+.card h3 { margin-top: 0; }
+
+/* ---------- Accessibility: visible keyboard focus ---------- */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+}
+
+input:focus, select:focus { border-color: var(--primary); }
+
+/* ---------- Table polish ---------- */
+tbody tr:hover { background: #f0f3fa; }
+tbody tr:last-child td { border-bottom: none; }
+
+/* ---------- Navbar polish ---------- */
+.nav-links a { transition: background 0.2s; }
+.nav-links a:hover { background: rgba(255, 255, 255, 0.15); }
+.nav-links a.active:hover { background: var(--accent); }
+.nav-links { align-items: center; }
+
+/* ---------- Tablet and below ---------- */
+@media (max-width: 768px) {
+  .navbar { padding: 0.8rem 1rem; }
+  .container { padding: 1.2rem 0.8rem; }
+  th, td { padding: 0.6rem 0.7rem; font-size: 0.9rem; }
+  .stat-value { font-size: 1.6rem; }
+}
+
+/* ---------- Phones ---------- */
+@media (max-width: 520px) {
+  .navbar { flex-direction: column; align-items: flex-start; }
+  .nav-links { width: 100%; }
+  .nav-links a { flex: 1 1 auto; text-align: center; }
+  .nav-user { width: 100%; }
+
+  .filters select { flex: 1 1 100%; }
+  .form-actions { flex-direction: column; }
+  .form-actions .btn { width: 100%; }
+  .actions { flex-direction: column; }
+  .login-card { margin: 1rem auto; }
+}
